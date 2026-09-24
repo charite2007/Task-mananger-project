@@ -33,3 +33,4 @@ node_modules/
 .env.*.local
 venv/
 env/
+.vscode
