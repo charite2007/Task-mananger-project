@@ -1,0 +1,10 @@
+const errorMiddleware = (err,res,req,next)=>{
+    console.error(err.stack);
+    res.status(err.statusCode ||500).json({
+        success:false,
+        message:err.message ||"Internal server error"
+    })
+    
+}
+
+export default errorMiddleware
