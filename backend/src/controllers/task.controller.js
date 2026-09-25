@@ -66,38 +66,40 @@ export const getTaskById = async (req, res) => {
 // updating the task with id
 
 export const updateTasks = async (req, res) => {
-  try {
-    const { title, description, completed, priority } = req.body;
-    const id = req.params.id;
-    const task = await Task.findByIdAndUpdate(
-      id,
-      {
-        title,
-        description,
-        completed,
-        priority,
-      },
-      {
-        new: true,
-        runValidators: true,
-      },
-    );
+   try {
+    const task = await Task.findById(req.params.id);
 
-    if (!task)
-      return res
-        .status(404)
-        .json({ success: false, message: "Task Not Found" });
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
+    }
+
+    const {
+      title,
+      description,
+      completed,
+      priority,
+    } = req.body;
+
+    task.title = title ?? task.title;
+    task.description = description ?? task.description;
+    task.completed = completed ?? task.completed;
+    task.priority = priority ?? task.priority;
+
+    const updatedTask = await task.save();
 
     res.status(200).json({
       success: true,
       message: "Task updated successfully",
-      data: task,
+      data: updatedTask,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: `Internal server error`, Error: error.message });
-    console.log(`Error :${error}`);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 

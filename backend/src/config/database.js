@@ -1,15 +1,19 @@
 import mongoose from "mongoose";
 import "dotenv/config.js";
+
 const connectDB = async () => {
-  const MONGODB_URI = process.env.MONGODB_URI;
+  const MONGODB_URI =
+    process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/task-management";
+
   try {
     await mongoose.connect(MONGODB_URI);
-    console.log(`Database connected successfully`);
+    console.log("Database connected successfully");
   } catch (error) {
-    console.log(`Database connection failed with the Error:${error} `);
+    console.error(
+      `Database connection failed with the error: ${error.message}`,
+    );
     process.exit(1);
   }
 };
 
-
-export default connectDB
+export default connectDB;
